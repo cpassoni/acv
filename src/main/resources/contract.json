@@ -1,0 +1,179 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/destination/hotels/{destinationId}": {
+      "get": {
+        "tags": [
+          "hotel-destination-controller"
+        ],
+        "summary": "Retrieve hotels for a destination",
+        "operationId": "getHotelsByDestination",
+        "parameters": [
+          {
+            "name": "destinationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All hotels from the destination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DestinationResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Destination not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "hotel-destination-controller"
+        ],
+        "summary": "Change destination name",
+        "operationId": "updateHotelName",
+        "parameters": [
+          {
+            "name": "destinationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "New name contains invalid character"
+          },
+          "404": {
+            "description": "Destination not found"
+          },
+          "200": {
+            "description": "Changed destination name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DestinationResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "hotel-destination-controller"
+        ],
+        "summary": "Remove destination",
+        "operationId": "deleteById",
+        "parameters": [
+          {
+            "name": "destinationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Destination removed"
+          },
+          "404": {
+            "description": "Destination not found"
+          }
+        }
+      }
+    },
+    "/destination/hotels": {
+      "get": {
+        "tags": [
+          "hotel-destination-controller"
+        ],
+        "summary": "Retrieve hotels for all Destinations",
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "description": "All hotels from all destination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DestinationResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UpdateInput": {
+        "type": "object",
+        "properties": {
+          "newName": {
+            "pattern": "[a-zA-Z]+$",
+            "type": "string"
+          }
+        }
+      },
+      "DestinationResource": {
+        "type": "object",
+        "properties": {
+          "destinationCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "destinationName": {
+            "type": "string"
+          },
+          "hotelCodes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      }
+    }
+  }
+}
